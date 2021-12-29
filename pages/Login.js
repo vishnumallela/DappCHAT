@@ -7,12 +7,13 @@ import Logo from '../images/Dapp.png'
 
 
 function Login() {
-  const { authenticate } = useMoralis();
+  const { authenticate,enableWeb3 } = useMoralis();
 
   const handleclick = (e) => {
     e.preventDefault();
-    authenticate();
-  };
+    authenticate({ signingMessage: "DappCHAT-authentication" });
+    enableWeb3();
+};
   return (
     <div className=" flex flex-col items-center justify-center w-full h-screen bg-[#e0e0e0] relative">
       <div className="w-[900px] h-[900px] absolute ml-10 z-4">

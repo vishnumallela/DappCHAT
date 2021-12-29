@@ -1,15 +1,21 @@
 import {FiPlus} from 'react-icons/fi'
-import {MoralisProvider, useMoralis} from 'react-moralis'
+import {useMoralis} from 'react-moralis'
 import {VscChromeClose} from 'react-icons/vsc'
 import uuid from 'react-uuid'
 import {useState,useEffect} from 'react'
 import { useRouter } from 'next/router'
 import Image from 'next/image'
+import {CopyToClipboard} from 'react-copy-to-clipboard';
+import {IoCopy} from 'react-icons/io'
+import swal from 'sweetalert'
+import {BsFillHouseFill} from 'react-icons/bs'
+import{FcKey} from 'react-icons/fc'
+import{ImUser} from 'react-icons/im'
 
 
 function Dashboard() {
   const router = useRouter()
-  const { user, logout,Moralis } = useMoralis();
+  const { user, logout,Moralis} = useMoralis();
   const[rooms,setrooms]=useState([])
   const[refresh,setrefresh]=useState(false)
   const [modal, setmodal] = useState(false);
@@ -38,12 +44,9 @@ const getrooms= async()=>{
 }
 
 
-useEffect(() => {
-    getrooms();
-
-
-
-}, [refresh])
+useEffect(async () => {
+  getrooms();
+}, [refresh]);
 
 console.log(rooms)
 
@@ -67,8 +70,14 @@ console.log(rooms)
         chatRoom.set('uid',uuid())
         chatRoom.set('people',[user.attributes.username])
         chatRoom.save();
+        setroomname()
         setmodal(false)
-        setrefresh(!refresh)
+        swal({
+          title: "Room Created!",
+          icon: "success",
+          button: "OK",
+        });
+        
 
 
     }else{
@@ -83,11 +92,27 @@ console.log(rooms)
 
   //user logout
   const logoutuser = () => {
-    if (confirm("Do you really want to logout ?")) {
-      logout();
-    } else {
-      console.log("login reverted");
-    }
+    swal({
+      title: "Are you sure you want to logout?",
+      icon: "warning",
+      buttons:{
+        cancel:true,
+        confirm:"logout",
+
+
+      },
+      
+    })
+    .then((data) => {
+      if (data) {
+        logout();
+       
+      } else {
+        return ;
+        
+      }
+    });
+   
   };
 
   return (
@@ -136,18 +161,32 @@ console.log(rooms)
         </div>
       </div>
 
-      <div className='flex items-center justify-center w-full bg-yellow-100 pb-2'>
+      <div className="flex items-center justify-center w-full bg-yellow-100 pb-2 relative">
         <div
-          className="w-[150px] h-[150px] rounded bg-white mt-4 shadow-lg  flex items-center flex-col justify-center cursor-pointer hover:border-2"
+          className="w-[150px] h-[150px] rounded bg-white mt-4 mb-4 shadow-lg pb-3 flex items-center flex-col justify-center cursor-pointer hover:border-2"
           onClick={Modalopener}
         >
-          <FiPlus className="h-[30px] w-[30px] text-blue-500 " />
-          <p className="mt-2 font-[Lekton] font-semibold">ADD ROOM</p>
+          <BsFillHouseFill className="h-[20px] w-[20px] text-blue-500 " />
+          <p className="mt-2  font-[Lekton] font-semibold">ADD ROOM</p>
         </div>
-       </div>
-       
+
+      
+        <p className='absolute top-3 shadow-lg rounded-full cursor-pointer font-[Lekton] font-semibold  bg-white text-md right-10 px-3 py-1'>
+        <FcKey className='inline-block mr-2  object-contain'/>
+          {user.attributes.ethAddress}
+          
+        </p>
+        <p className='absolute top-12 mt-1 shadow-lg align-middle   rounded-full cursor-pointer font-[Lekton] font-semibold  bg-white text-md right-10 px-3 py-1'>
+        <ImUser className='inline-block mr-2  object-contain text-blue-500'/>
+          {user.attributes.username}
+          
+        </p>
 
 
+
+
+
+      </div>
 
       <button
         onClick={logoutuser}
@@ -155,34 +194,32 @@ console.log(rooms)
       >
         Logout
       </button>
-      <div className='w-full h-auto top-[200px] absolute z-100 flex justify-start align-top p-10'>
-     
-           
-           {rooms?rooms.map((room)=>{
-                return(<>
-                <div onClick={()=>router.push('/Rooms/'+room.title)} className='w-[300px] h-[150px] rounded-md bg-white shadow-lg  flex items-center flex-col justify-center cursor-pointer ml-4 overflow-hidden relative'>
-                    <p className='font-[brown]'>{room.title}</p>
-                    <p className='font-[Lekton] text-sm'>{room.uid}</p>
-                    <Image className="object-contain pt-4 rounded-full" src={`https://avatars.dicebear.com/api/initials/${room.title}.svg`} height="50px" width="50px"/>
-                    <div className='rounded-full bg-yellow-200 h-[80px] w-[80px] absolute -right-8 -bottom-9'></div>
-    
-    
+      <div className="w-full h-auto top-[200px] absolute z-100 flex justify-start align-top p-10">
+        {rooms ? (
+          rooms.map((room) => {
+            return (
+              <>
+                <div
+                  onClick={() => router.push("/Rooms/" + room.title)}
+                  className="w-[300px] h-[150px] rounded-md bg-white shadow-lg  flex items-center flex-col justify-center cursor-pointer ml-4 overflow-hidden relative"
+                >
+                  <p className="font-[brown]">{room.title}</p>
+                  <p className="font-[Lekton] text-sm">{room.uid}</p>
+                  <Image
+                    className="object-contain pt-4 rounded-full"
+                    src={`https://avatars.dicebear.com/api/initials/${room.title}.svg`}
+                    height="50px"
+                    width="50px"
+                  />
+                  <div className="rounded-full bg-yellow-200 h-[80px] w-[80px] absolute -right-8 -bottom-9"></div>
                 </div>
-                
-                
-                </>)
-            }):(<></>)}
-    
-    
-    
-
+              </>
+            );
+          })
+        ) : (
+          <></>
+        )}
       </div>
-
-
-
-
-
-
     </div>
   );
 }

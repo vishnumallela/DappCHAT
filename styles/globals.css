@@ -5,3 +5,7 @@
     font-family: Lekton;
     src: url(../fonts/Lekton-Regular.ttf);
 }
+@font-face {
+    font-family:brown;
+    src: url(../fonts/brown-regular.ttf);
+}
