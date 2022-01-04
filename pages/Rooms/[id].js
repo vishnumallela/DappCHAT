@@ -1,64 +1,77 @@
 import { useRouter } from 'next/router'
-import {useMoralis} from 'react-moralis'
+import {useMoralis,useMoralisQuery} from 'react-moralis'
 import {useEffect,useState} from 'react'
 import { ethers } from "ethers";
 import{ContractABI,ContractAddress} from '../../utils/constants'
 
+
 function Room() {
-    const {user} = useMoralis();
-    const router = useRouter()
-    const { id } = router.query
-    const [provider, setProvider] = useState({})
+  const router = useRouter();
+  const { id } = router.query;
+  
+  const[text,settext]= useState("Hello");
+  const { user, Moralis } = useMoralis();
+  const [roomdetails, setroomdetails] = useState();
+  const [provider, setProvider] = useState({});
+  const userName=user?.get("username");
+  const userEthadd = user?.get("ethAddress")
+  const { data, error, isLoading } = useMoralisQuery("Messages", query =>query.equalTo("room",id).ascending("createdAt"),[],{live:true},);
+  
+  
+
+  
+  
+
+ 
+  
 
 
-    useEffect(async () => {
-      if (
-        typeof window.ethereum !== "undefined" ||
-        typeof window.web3 !== "undefined"
-      ) {
-        // Web3 browser user detected. You can now use the provider.
-        const accounts = await window.ethereum.enable();
-        // const curProvider = window['ethereum'] || window.web3.currentProvider
 
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        setProvider(provider);
-      }
-    }, []);
+
+  useEffect(async () => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    setProvider(provider);
+    const chatrooms = await Moralis.Object.extend("ChatRooms");
+    const query = new Moralis.Query(chatrooms);
+    query.equalTo("title", id);
+    const result = await query.find();
+    setroomdetails(result);
+  }, []);
+
+  
+//FUNCTION FOR SENDING MESSAGE TRANSACTION-   **IMPORTANT**  -
+
+const SendTransaction = async () => {
+    if(!text && !user) return null;
     const signer = provider.getSigner();
 
-    const SendTransaction = async () => {
-      const amount = ethers.utils.parseEther("0");
-      const contract = new ethers.Contract(
-        ContractAddress,
-        ContractABI,
-        signer
-      );
-      const hash = await contract
-        .addToBlockchain(
-          "0xd63C78192d82081Ae02C1b0DF146f0295710451D",
-          amount,
-          "hello world",
-          "1st message"
-        )
-        .then((hash) => {
-          console.log(hash);
-        });
-    };
+    const amount = ethers.utils.parseEther("0");
+    const contract = new ethers.Contract(ContractAddress, ContractABI, signer);
+    const hash = await contract
+      .addToBlockchain(
+        userEthadd,
+        amount,
+        text,
+        `${userEthadd+amount+text+id}`,
+      )
+      .then((hash) => {
+        console.log(hash);
+        const Messages = Moralis.Object.extend("Messages");
+        const message = new Messages();
+        message.set("message", text);
+        message.set("sender", userEthadd);
+        message.set("room", id);
+        message.set("username", userName);
+        message.save();
+      })
+      .catch((error) => console.log(error));
+  };
 
-
-
-
-
-
-
-    return (
-        <div>
-          
-          <h1>Room Page</h1>
-        </div>
-    )
+  return <div>
+    
+  </div>;
 }
 
-export default Room
+export default Room;
 
 

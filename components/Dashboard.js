@@ -1,126 +1,97 @@
-import {FiPlus} from 'react-icons/fi'
-import {useMoralis} from 'react-moralis'
-import {VscChromeClose} from 'react-icons/vsc'
-import uuid from 'react-uuid'
-import {useState,useEffect} from 'react'
-import { useRouter } from 'next/router'
-import Image from 'next/image'
-import {CopyToClipboard} from 'react-copy-to-clipboard';
-import {IoCopy} from 'react-icons/io'
-import swal from 'sweetalert'
-import {BsFillHouseFill} from 'react-icons/bs'
-import{FcKey} from 'react-icons/fc'
-import{ImUser} from 'react-icons/im'
-import{SiEthereum} from 'react-icons/si'
-
-
+import { useMoralis } from "react-moralis";
+import { VscChromeClose } from "react-icons/vsc";
+import uuid from "react-uuid";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import Image from "next/image";
+import swal from "sweetalert";
+import { BsFillHouseFill } from "react-icons/bs";
+import { FcKey } from "react-icons/fc";
+import { ImUser } from "react-icons/im";
 
 function Dashboard() {
-  const router = useRouter()
-  const { user, logout,Moralis} = useMoralis();
-  const[rooms,setrooms]=useState([])
-  const[refresh,setrefresh]=useState(false)
+  const router = useRouter();
+  const { user, logout, Moralis } = useMoralis();
+  const [rooms, setrooms] = useState([]);
+  const [refresh, setrefresh] = useState(false);
   const [modal, setmodal] = useState(false);
   const [roomname, setroomname] = useState();
-  const username =user.attributes.username
-  
+  const username = user.attributes.username;
 
+  //GETTING ROOMS WHERE USER IS A MEMBER
 
+  const getrooms = async () => {
+    let samplearray = [];
+    const chatrooms = Moralis.Object.extend("ChatRooms");
+    const query = new Moralis.Query(chatrooms);
+    query.equalTo("people", username);
 
+    const results = await query.find();
 
-
-
-const getrooms= async()=>{
-    let samplearray=[]
-    const chatrooms = Moralis.Object.extend("ChatRooms")
-    const query = new Moralis.Query(chatrooms)
-    query.equalTo("people",username)
-    
-    const results = await query.find()
-    
     for (let i = 0; i < results.length; i++) {
-        // This does not require a network access.
-        let roomdetail = results[i].attributes
+      // This does not require a network access.
+      let roomdetail = results[i].attributes;
 
-        samplearray.push(roomdetail)
-      }
-    setrooms(samplearray)
-    console.log(samplearray)
-   
-}
+      samplearray.push(roomdetail);
+    }
+    setrooms(samplearray);
+    console.log(samplearray);
+  };
 
+  //USEEFFECT-ENABLING WEB3-PROVIDER
 
-useEffect(async () => {
-  getrooms();
-  console.log(user)
-  
-}, [refresh]);
+  useEffect(async () => {
+    getrooms();
+    console.log(user);
+  }, [refresh]);
 
-console.log(rooms)
-
-
-
-
-
+  console.log(rooms);
 
   const Modalopener = () => {
     setmodal(true);
   };
-  //create New Chat Room
+
+  //CREATEING CHAT ROOM FUNCTION
 
   const CreateRoom = async (e) => {
     e.preventDefault();
-    if(confirm(`Do you really want to create a Room with title ${roomname}`)){
-        const ChatRooms = Moralis.Object.extend("ChatRooms")
-        const chatRoom= new ChatRooms();
-        chatRoom.set('title',roomname)
-        chatRoom.set('creator',user.attributes.username)
-        chatRoom.set('uid',uuid())
-        chatRoom.set('people',[user.attributes.username])
-        chatRoom.save();
-        setroomname()
-        setmodal(false)
-        swal({
-          title: "Room Created!",
-          icon: "success",
-          button: "OK",
-        });
-        
-
-
-    }else{
-        pass
+    if (confirm(`Do you really want to create a Room with title ${roomname}`)) {
+      const ChatRooms = Moralis.Object.extend("ChatRooms");
+      const chatRoom = new ChatRooms();
+      chatRoom.set("title", roomname);
+      chatRoom.set("creator", user.attributes.username);
+      chatRoom.set("uid", uuid());
+      chatRoom.set("people", [user.attributes.username]);
+      chatRoom.save();
+      setroomname();
+      setmodal(false);
+      swal({
+        title: "Room Created!",
+        icon: "success",
+        button: "OK",
+      });
+    } else {
+      pass;
     }
   };
 
+  //USER-LOGOUT
 
-
-
-
-
-  //user logout
   const logoutuser = () => {
     swal({
       title: "Are you sure you want to logout?",
       icon: "warning",
-      buttons:{
-        cancel:true,
-        confirm:"logout",
-
-
+      buttons: {
+        cancel: true,
+        confirm: "logout",
       },
-      
-    })
-    .then((data) => {
+    }).then((data) => {
       if (data) {
         logout();
-       
       } else {
-        return ;
-        
+        return;
       }
     });
-   
   };
 
   return (
@@ -190,18 +161,14 @@ console.log(rooms)
           USER-NAME: <br />
           {user.attributes.username}
         </p>
-        <div className='bg-white left-5 w-[120px] h-[120px] rounded-full absolute flex items-center justify-center shadow-blue-400 shadow-2xl'>
-        <Image
-                    className="object-contain"
-                    src={`https://avatars.dicebear.com/api/avataaars/${user.attributes.username}.svg`}
-                    height="80px"
-                    width="80px"
-                  />
-
-
+        <div className="bg-white left-5 w-[120px] h-[120px] rounded-full absolute flex items-center justify-center shadow-blue-400 shadow-2xl">
+          <Image
+            className="object-contain"
+            src={`https://avatars.dicebear.com/api/avataaars/${user.attributes.username}.svg`}
+            height="80px"
+            width="80px"
+          />
         </div>
-
-     
       </div>
 
       <button
