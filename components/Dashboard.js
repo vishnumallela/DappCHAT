@@ -11,6 +11,8 @@ import swal from 'sweetalert'
 import {BsFillHouseFill} from 'react-icons/bs'
 import{FcKey} from 'react-icons/fc'
 import{ImUser} from 'react-icons/im'
+import{SiEthereum} from 'react-icons/si'
+
 
 
 function Dashboard() {
@@ -21,7 +23,11 @@ function Dashboard() {
   const [modal, setmodal] = useState(false);
   const [roomname, setroomname] = useState();
   const username =user.attributes.username
-  console.log(username)
+  
+
+
+
+
 
 
 const getrooms= async()=>{
@@ -46,6 +52,8 @@ const getrooms= async()=>{
 
 useEffect(async () => {
   getrooms();
+  console.log(user)
+  
 }, [refresh]);
 
 console.log(rooms)
@@ -163,29 +171,37 @@ console.log(rooms)
 
       <div className="flex items-center justify-center w-full bg-yellow-100 pb-2 relative">
         <div
-          className="w-[150px] h-[150px] rounded bg-white mt-4 mb-4 shadow-lg pb-3 flex items-center flex-col justify-center cursor-pointer hover:border-2"
+          className="w-[150px] h-[150px] rounded bg-white mt-4 mb-4 shadow-xl pb-3 flex items-center flex-col justify-center cursor-pointer hover:border-2"
           onClick={Modalopener}
         >
-          <BsFillHouseFill className="h-[20px] w-[20px] text-blue-500 " />
-          <p className="mt-2  font-[Lekton] font-semibold">ADD ROOM</p>
+          <BsFillHouseFill className="h-[30px] w-[30px] text-blue-500 " />
+          <p className="mt-4  font-[Lekton] font-semibold text-sm text-center">
+            CREATE <br /> CHAT ROOM
+          </p>
         </div>
 
-      
-        <p className='absolute top-3 shadow-lg rounded-full cursor-pointer font-[Lekton] font-semibold  bg-white text-md right-10 px-3 py-1'>
-        <FcKey className='inline-block mr-2  object-contain'/>
+        <p className="absolute top-3 shadow-lg rounded-full cursor-pointer font-[Lekton] font-semibold  bg-white text-md right-10 px-3 py-1">
+          <FcKey className="inline-block mr-2  object-contain" /> PUBLICKEY:
+          <br />
           {user.attributes.ethAddress}
-          
         </p>
-        <p className='absolute top-12 mt-1 shadow-lg align-middle   rounded-full cursor-pointer font-[Lekton] font-semibold  bg-white text-md right-10 px-3 py-1'>
-        <ImUser className='inline-block mr-2  object-contain text-blue-500'/>
+        <p className="absolute top-20 mt-1 shadow-lg align-middle   rounded-full cursor-pointer font-[Lekton] font-semibold  bg-white text-md right-10 px-3 py-1">
+          <ImUser className="inline-block mr-2  object-contain text-blue-500" />{" "}
+          USER-NAME: <br />
           {user.attributes.username}
-          
         </p>
+        <div className='bg-white left-5 w-[120px] h-[120px] rounded-full absolute flex items-center justify-center shadow-blue-400 shadow-2xl'>
+        <Image
+                    className="object-contain"
+                    src={`https://avatars.dicebear.com/api/avataaars/${user.attributes.username}.svg`}
+                    height="80px"
+                    width="80px"
+                  />
 
 
+        </div>
 
-
-
+     
       </div>
 
       <button
