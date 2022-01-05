@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import {useMoralis,useMoralisQuery} from 'react-moralis'
+import {useMoralis,useMoralisQuery,useChain} from 'react-moralis'
 import {useEffect,useState} from 'react'
 import { ethers } from "ethers";
 import{ContractABI,ContractAddress} from '../../utils/constants'
@@ -16,6 +16,7 @@ function Room() {
   const userName=user?.get("username");
   const userEthadd = user?.get("ethAddress")
   const { data, error, isLoading } = useMoralisQuery("Messages", query =>query.equalTo("room",id).ascending("createdAt"),[],{live:true},);
+
   
   
 
@@ -68,6 +69,7 @@ const SendTransaction = async () => {
   };
 
   return <div>
+    <button onClick={SendTransaction}>SEND</button>
     
   </div>;
 }

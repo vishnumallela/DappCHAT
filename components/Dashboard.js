@@ -1,4 +1,4 @@
-import { useMoralis } from "react-moralis";
+import { useMoralis,useChain } from "react-moralis";
 import { VscChromeClose } from "react-icons/vsc";
 import uuid from "react-uuid";
 import { useState, useEffect } from "react";
@@ -8,15 +8,18 @@ import swal from "sweetalert";
 import { BsFillHouseFill } from "react-icons/bs";
 import { FcKey } from "react-icons/fc";
 import { ImUser } from "react-icons/im";
+import Polygon from '../images/Polygon.svg'
 
 function Dashboard() {
   const router = useRouter();
   const { user, logout, Moralis } = useMoralis();
+  const {chainId, chain} = useChain();
   const [rooms, setrooms] = useState([]);
   const [refresh, setrefresh] = useState(false);
   const [modal, setmodal] = useState(false);
   const [roomname, setroomname] = useState();
   const username = user.attributes.username;
+  console.log(chain)
 
   //GETTING ROOMS WHERE USER IS A MEMBER
 
@@ -95,7 +98,7 @@ function Dashboard() {
   };
 
   return (
-    <div className="h-screen w-screen bg-blue-300 relative">
+    <div className="h-screen w-screen bg-blue-300 bg-blend-soft-light relative">
       <div
         className={` w-full h-screen  flex items-center justify-center fixed z-20 backdrop-blur-md ${
           modal ? "visible" : "hidden"
@@ -142,32 +145,36 @@ function Dashboard() {
 
       <div className="flex items-center justify-center w-full bg-yellow-100 pb-2 relative">
         <div
-          className="w-[150px] h-[150px] rounded bg-white mt-4 mb-4 shadow-xl pb-3 flex items-center flex-col justify-center cursor-pointer hover:border-2"
+          className="w-[200px] h-[200px]  bg-white mt-4 mb-4 shadow-xl  flex items-center rounded-full flex-col justify-center cursor-pointer hover:border-8"
           onClick={Modalopener}
         >
           <BsFillHouseFill className="h-[30px] w-[30px] text-blue-500 " />
-          <p className="mt-4  font-[Lekton] font-semibold text-sm text-center">
-            CREATE <br /> CHAT ROOM
+          <p className="mt-4  font-[Quantico] font-semibold text-sm text-center">
+            CREATE CHAT ROOM
           </p>
         </div>
 
-        <p className="absolute top-3 shadow-lg rounded-full cursor-pointer font-[Lekton] font-semibold  bg-white text-md right-10 px-3 py-1">
+        <p className="absolute top-3 shadow-lg rounded-full cursor-pointer font-[Quantico]   bg-white text-md right-10 px-4 py-1">
           <FcKey className="inline-block mr-2  object-contain" /> PUBLICKEY:
           <br />
           {user.attributes.ethAddress}
         </p>
-        <p className="absolute top-20 mt-1 shadow-lg align-middle   rounded-full cursor-pointer font-[Lekton] font-semibold  bg-white text-md right-10 px-3 py-1">
+        <p className="absolute top-20 mt-1 shadow-lg align-middle   rounded-full cursor-pointer font-[Quantico]   bg-white text-md right-10 px-4 py-1">
           <ImUser className="inline-block mr-2  object-contain text-blue-500" />{" "}
-          USER-NAME: <br />
-          {user.attributes.username}
+          USER-NAME: {user.attributes.username}
         </p>
-        <div className="bg-white left-5 w-[120px] h-[120px] rounded-full absolute flex items-center justify-center shadow-blue-400 shadow-2xl">
+        <div className="bg-white left-5 w-[300px] h-[150px] rounded absolute flex flex-col justify-around align-middle  shadow-2xl">
           <Image
-            className="object-contain"
+            className="object-contain bg-yellow-400"
             src={`https://avatars.dicebear.com/api/avataaars/${user.attributes.username}.svg`}
-            height="80px"
-            width="80px"
+            height="40px"
+            width="40px"
           />
+          
+     
+          <h1 className="text-center font-[Quantico]">{chain.name}</h1>
+          <Image src={Polygon} objectFit="contain" width="30px" height="30px"/>
+          <h1 className="text-center font-[Quantico]">{chainId}</h1>
         </div>
       </div>
 
@@ -184,9 +191,9 @@ function Dashboard() {
               <>
                 <div
                   onClick={() => router.push("/Rooms/" + room.title)}
-                  className="w-[300px] h-[150px] rounded-md bg-white shadow-lg  flex items-center flex-col justify-center cursor-pointer ml-4 overflow-hidden relative"
+                  className="w-[300px] h-[150px] rounded-md bg-white shadow-lg mt-3 flex items-center flex-col justify-center cursor-pointer ml-4 overflow-hidden relative"
                 >
-                  <p className="font-[brown]">{room.title}</p>
+                  <p className="font-[Quantico] text-lg">{room.title}</p>
                   <p className="font-[Lekton] text-sm">{room.uid}</p>
                   <Image
                     className="object-contain pt-4 rounded-full"

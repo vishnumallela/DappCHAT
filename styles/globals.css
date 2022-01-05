@@ -9,3 +9,8 @@
     font-family:brown;
     src: url(../fonts/brown-regular.ttf);
 }
+
+@font-face {
+    font-family: Quantico;
+    src: url(../fonts/Quantico-Regular.ttf);
+}
