@@ -15,7 +15,8 @@ function Room() {
   const [provider, setProvider] = useState({});
   const userName=user?.get("username");
   const userEthadd = user?.get("ethAddress")
-  const { data, error, isLoading } = useMoralisQuery("Messages", query =>query.equalTo("room",id).ascending("createdAt"),[],{live:true},);
+  
+  const { data, error, isLoading } = useMoralisQuery("Messages", query =>query.equalTo("roomID",id).ascending("createdAt"),[],{live:true},);
 
   
   
@@ -34,12 +35,12 @@ function Room() {
     setProvider(provider);
     const chatrooms = await Moralis.Object.extend("ChatRooms");
     const query = new Moralis.Query(chatrooms);
-    query.equalTo("title", id);
+    query.equalTo("uid", id);
     const result = await query.find();
     setroomdetails(result);
   }, []);
 
-  
+
 //FUNCTION FOR SENDING MESSAGE TRANSACTION-   **IMPORTANT**  -
 
 const SendTransaction = async () => {
@@ -61,7 +62,7 @@ const SendTransaction = async () => {
         const message = new Messages();
         message.set("message", text);
         message.set("sender", userEthadd);
-        message.set("room", id);
+        message.set("roomID", id);
         message.set("username", userName);
         message.save();
       })
@@ -69,7 +70,7 @@ const SendTransaction = async () => {
   };
 
   return <div>
-    <button onClick={SendTransaction}>SEND</button>
+   
     
   </div>;
 }

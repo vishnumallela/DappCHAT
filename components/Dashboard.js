@@ -9,6 +9,7 @@ import { BsFillHouseFill } from "react-icons/bs";
 import { FcKey } from "react-icons/fc";
 import { ImUser } from "react-icons/im";
 import Polygon from '../images/Polygon.svg'
+import{RiLogoutCircleRFill} from 'react-icons/ri'
 
 function Dashboard() {
   const router = useRouter();
@@ -42,7 +43,7 @@ function Dashboard() {
   };
 
   //USEEFFECT-ENABLING WEB3-PROVIDER
-
+console.log(rooms)
   useEffect(async () => {
     getrooms();
     console.log(user);
@@ -98,7 +99,7 @@ function Dashboard() {
   };
 
   return (
-    <div className="h-screen w-screen bg-blue-300 bg-blend-soft-light relative">
+    <div className="h-screen w-screen  bg-gradient-to-r from-indigo-400 to-white bg-blend-soft-light relative">
       <div
         className={` w-full h-screen  flex items-center justify-center fixed z-20 backdrop-blur-md ${
           modal ? "visible" : "hidden"
@@ -143,7 +144,7 @@ function Dashboard() {
         </div>
       </div>
 
-      <div className="flex items-center justify-center w-full bg-yellow-100 pb-2 relative">
+      <div className="flex items-center justify-center w-full bg-yellow-400 pb-2 relative">
         <div
           className="w-[200px] h-[200px]  bg-white mt-4 mb-4 shadow-xl  flex items-center rounded-full flex-col justify-center cursor-pointer hover:border-8"
           onClick={Modalopener}
@@ -165,7 +166,7 @@ function Dashboard() {
         </p>
         <div className="bg-white left-5 w-[300px] h-[150px] rounded absolute flex flex-col justify-around align-middle  shadow-2xl">
           <Image
-            className="object-contain bg-yellow-400"
+            className="object-contain bg-indigo-200"
             src={`https://avatars.dicebear.com/api/avataaars/${user.attributes.username}.svg`}
             height="40px"
             width="40px"
@@ -180,9 +181,9 @@ function Dashboard() {
 
       <button
         onClick={logoutuser}
-        className="bg-white rounded-full px-7 py-2 bottom-5 absolute right-[40px] font-[Lekton] font-bold z-40"
+        className="bg-yellow-300 rounded-full px-7 py-2 bottom-5 absolute right-[40px] font-[Lekton] font-bold z-40"
       >
-        Logout
+        Logout <RiLogoutCircleRFill className="inline"/>
       </button>
       <div className="w-full h-auto top-[200px] absolute z-100 flex justify-start align-top p-10">
         {rooms ? (
@@ -190,10 +191,10 @@ function Dashboard() {
             return (
               <>
                 <div
-                  onClick={() => router.push("/Rooms/" + room.title)}
-                  className="w-[300px] h-[150px] rounded-md bg-white shadow-lg mt-3 flex items-center flex-col justify-center cursor-pointer ml-4 overflow-hidden relative"
+                  onClick={() => router.push("/Rooms/" + room.uid)}
+                  className="w-[300px] h-[150px] rounded-md bg-white shadow-2xl mt-3 flex items-center flex-col justify-center cursor-pointer ml-4 overflow-hidden relative"
                 >
-                  <p className="font-[Quantico] text-lg">{room.title}</p>
+                  <p className="font-[Quantico] text-lg ">{room.title}</p>
                   <p className="font-[Lekton] text-sm">{room.uid}</p>
                   <Image
                     className="object-contain pt-4 rounded-full"
@@ -201,7 +202,7 @@ function Dashboard() {
                     height="50px"
                     width="50px"
                   />
-                  <div className="rounded-full bg-yellow-200 h-[80px] w-[80px] absolute -right-8 -bottom-9"></div>
+                  <div className="rounded-full bg-yellow-400 h-[80px] w-[80px] absolute -right-8 -bottom-9"></div>
                 </div>
               </>
             );
