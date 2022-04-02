@@ -31,9 +31,9 @@ function Login() {
           src="https://docs.metamask.io/metamask-fox.svg"
         />
       </button>
-      <p className="absolute bottom-8 font-[Lekton]">
+       <p className="absolute bottom-8 font-[Lekton]">
         CREATED BY VISHNU MALLELA & NARENDRA UNDER SUPERVISION OF DR.JAGALINGAM{" "}
-      </p>
+      </p> 
       <p className="absolute bottom-2 font-[Lekton]"> © DAPP CHAT </p>
     </div>
   );

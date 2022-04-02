@@ -15,6 +15,8 @@ function Room() {
   const [provider, setProvider] = useState({});
   const userName=user?.get("username");
   const userEthadd = user?.get("ethAddress")
+
+  //Fetching live data of Room messages based on room id
   
   const { data, error, isLoading } = useMoralisQuery("Messages", query =>query.equalTo("roomID",id).ascending("createdAt"),[],{live:true},);
 
@@ -54,7 +56,7 @@ const SendTransaction = async () => {
         userEthadd,
         amount,
         text,
-        `${userEthadd+amount+text+id}`,
+        id,
       )
       .then((hash) => {
         console.log(hash);
@@ -69,7 +71,13 @@ const SendTransaction = async () => {
       .catch((error) => console.log(error));
   };
 
-  return <div>
+  return <div className='w-full h-[100vh] bg-yellow-100'>
+
+   
+<button onClick={SendTransaction}>Send</button>
+
+
+
    
     
   </div>;
