@@ -3,6 +3,9 @@ import {useMoralis,useMoralisQuery,useChain} from 'react-moralis'
 import {useEffect,useState} from 'react'
 import { ethers } from "ethers";
 import{ContractABI,ContractAddress} from '../../utils/constants'
+import Web3 from 'web3';
+import{BsFillPlusCircleFill} from 'react-icons/bs'
+
 
 
 function Room() {
@@ -15,6 +18,7 @@ function Room() {
   const [provider, setProvider] = useState({});
   const userName=user?.get("username");
   const userEthadd = user?.get("ethAddress")
+  const[add,setadd]=useState();
 
   //Fetching live data of Room messages based on room id
   
@@ -71,10 +75,54 @@ const SendTransaction = async () => {
       .catch((error) => console.log(error));
   };
 
-  return <div className='w-full h-[100vh] bg-yellow-100'>
+  const AddtoRoom = async () => {
+    if(!add) return null;
+    const ChatRooms = Moralis.Object.extend("ChatRooms");
+    const query = new Moralis.Query(ChatRooms);
+    query.equalTo("uid", id);
+    const result = await query.first();
+    result.addUnique("people",add);
+    result.save();
+    alert("User Added")
+
+
+
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
    
-<button onClick={SendTransaction}>Send</button>
+  
+    
+  return <div className='w-full h-[100vh] bg-white'>
+    <div className='w-[30%] h-full bg-blue-200'>
+      <input type="text" onChange={(e)=>setadd(e.target.value)} placeholder='Enter UserName' className='mt-10 ml-4 rounded-md py-2 pl-2 pr-40 focus:outline-none'/>
+      <button onClick={AddtoRoom} class="bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-3">Add <BsFillPlusCircleFill className='inline align-middle'/>
+      </button>
+
+
+
+
+      </div>
+
+
+   
+
 
 
 
