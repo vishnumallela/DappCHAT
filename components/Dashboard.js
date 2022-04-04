@@ -151,7 +151,7 @@ console.log(rooms)
         >
           <BsFillHouseFill className="h-[30px] w-[30px] text-blue-500 " />
           <p className="mt-4  font-[Quantico] font-semibold text-sm text-center">
-            CREATE CHAT ROOM
+            CREATE DECENTRALIZED CHAT ROOM
           </p>
         </div>
 
