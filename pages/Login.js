@@ -31,10 +31,10 @@ function Login() {
           src="https://docs.metamask.io/metamask-fox.svg"
         />
       </button>
-       <p className="absolute bottom-8 font-[Lekton]">
-        CREATED BY VISHNU MALLELA & NARENDRA UNDER SUPERVISION OF DR.JAGALINGAM{" "}
+       <p className="absolute bottom-[409px] font-[Lekton]">
+        DEVELOPED BY VISHNU MALLELA & NARENDRA UNDER SUPERVISION OF DR.JAGALINGAM.P{" "}
       </p> 
-      <p className="absolute bottom-2 font-[Lekton]"> © DAPP CHAT </p>
+      <p className="absolute bottom-[380px] font-[Lekton]"> © DAPP CHAT </p>
     </div>
   );
 }
