@@ -123,7 +123,7 @@ function Room() {
            <div className='w-[80%] rounded-md flex flex-col items-start justify-start h-full mt-4 bg-white overflow-y-scroll scroll-smooth scrollbar-hide'>
             
              {data.map((message) => {
-              return <div className={`rounded-full flex items-center w-fit bg-yellow-300 p-3  mt-2 ${message.get('username')==user.attributes.username ? 'self-end bg-blue-300 shadow-md text-white mr-4 rounded-br-none':'self-start ml-4 rounded-bl-none shadow-md bg-yellow-200'} `}>
+              return <div className={` relative rounded-full flex items-center w-fit bg-yellow-300 p-3  mt-5 ${message.get('username')==user.attributes.username ? 'self-end bg-blue-300 shadow-md text-white mr-4 rounded-br-none':'self-start ml-4 rounded-bl-none shadow-md bg-yellow-200'} `}>
                  <Image
                         className="object-contain p-5 inline-block rounded-full bg-white"
                         src={`https://avatars.dicebear.com/api/avataaars/${message.get("username")}.svg`}
@@ -131,6 +131,7 @@ function Room() {
                         width="30px"
                       />
                 <p className='font-[Quantico] ml-1'>{message.get("message")}</p>
+                <p className='text-[9px] absolute text-gray-400 bottom-[-14px] '>{message.get("sender")}</p>
                 
                  </div>
              
