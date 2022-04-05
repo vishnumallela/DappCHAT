@@ -14,7 +14,7 @@ function Room() {
   const router = useRouter();
   const { id } = router.query;
 
-  const [text, settext] = useState("Hello");
+  const [text, settext] = useState();
   const { user, Moralis } = useMoralis();
   const [roomdetails, setroomdetails] = useState([]);
   const [provider, setProvider] = useState({});
@@ -24,7 +24,7 @@ function Room() {
 
   //Fetching live data of Room messages based on room id
 
-  const { data, error, isLoading } = useMoralisQuery("Messages",(query) => query.equalTo("roomID", id).ascending("createdAt").greaterThan("createdAt",new Date(Date.now()-1000*60*15)),
+  const { data, error, isLoading } = useMoralisQuery("Messages",(query) => query.equalTo("roomID", id).ascending("createdAt").greaterThan("createdAt",new Date(Date.now()-1000*60*1500)),
     [],
     { live: true }
   );
@@ -59,7 +59,7 @@ function Room() {
         message.set("sender", userEthadd);
         message.set("roomID", id);
         message.set("username", userName);
-        message.save();
+        message.save().then(()=>{ settext('')});
       })
       .catch((error) => console.log(error));
   };
@@ -72,7 +72,7 @@ function Room() {
     query.equalTo("uid", id);
     const result = await query.first();
     result.addUnique("people", add);
-    result.save();
+    result.save()
     alert("User Added");
   };
 
@@ -117,10 +117,24 @@ function Room() {
             </div>
           </div>
 
-          <div className="bg-yellow-400 w-[70%] h-full relative flex flex-col items-center justify-between">
+          <div className="bg-yellow-400 w-[70%] h-full  flex flex-col items-center justify-between">
            
            
-           <div className='w-[80%] rounded-md flex-grow mt-4 bg-white'>
+           <div className='w-[80%] rounded-md flex flex-col items-start justify-start h-full mt-4 bg-white overflow-y-scroll scroll-smooth scrollbar-hide'>
+            
+             {data.map((message) => {
+              return <div className={`rounded-full flex items-center w-fit bg-yellow-300 p-3  mt-2 ${message.get('username')==user.attributes.username ? 'self-end bg-blue-300 shadow-md text-white mr-4 rounded-br-none':'self-start ml-4 rounded-bl-none shadow-md bg-yellow-200'} `}>
+                 <Image
+                        className="object-contain p-5 inline-block rounded-full bg-white"
+                        src={`https://avatars.dicebear.com/api/avataaars/${message.get("username")}.svg`}
+                        height="30px"
+                        width="30px"
+                      />
+                <p className='font-[Quantico] ml-1'>{message.get("message")}</p>
+                
+                 </div>
+             
+             })}
            
 
            </div>
@@ -137,7 +151,8 @@ function Room() {
                   className="  outline-none rounded-lg border-2 px-20 border-red-500 py-2 "
                   type="text"
                   onChange={(e) => settext(e.target.value)}
-                />
+                  value={text}    
+                  autoFocus={true}            />
                 <button  type ="submit" className="ml-2 bg-blue-300 px-8 py-2 rounded-md text-black font-bold shadow-md">
                   SEND <GrSend className="inline" />
                 </button>
